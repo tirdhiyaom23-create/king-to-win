@@ -1,299 +1,199 @@
-
-<!DOCTYPE html>
-<html lang="en">
+DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aviator Premium Demo</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#030817;color:#f4f7ff;font-family:Arial,sans-serif}
-button,input{font:inherit}
-button{cursor:pointer;color:white}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px;border-bottom:1px solid #51204f;background:linear-gradient(100deg,#080b1b,#14102b,#030817)}
-.logo{font-size:clamp(25px,5vw,42px);font-weight:900;font-style:italic;color:#ff244a;text-shadow:0 0 15px #ff1744}
-.tag{font-size:10px;letter-spacing:2px;text-align:center}
-.balance{padding:12px;border:1px solid #294361;border-radius:12px;background:#050c1a;color:#ffd34e;font-size:20px;font-weight:bold}
-.layout{display:grid;grid-template-columns:155px minmax(0,1fr) 285px;gap:10px;padding:10px}
-.panel,.sidebar{background:#071326;border:1px solid #1d3b5e;border-radius:15px;padding:12px;margin-bottom:10px}
-.sidebar button{display:block;width:100%;padding:15px 7px;text-align:left;background:transparent;border:0;border-radius:9px;font-size:14px}
-.sidebar button.active{background:linear-gradient(90deg,#ff1744,#9e0031)}
-.graph{height:370px;position:relative;overflow:hidden;border-radius:12px;background:radial-gradient(ellipse at 50% 100%,#194263,#071329 65%,#020817)}
-.graph:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 49px,#28436044 50px),repeating-linear-gradient(90deg,transparent 0 49px,#28436044 50px)}
-#mult{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);font-size:clamp(48px,8vw,82px);font-weight:900;text-shadow:0 0 25px #ff1744;white-space:nowrap;z-index:2}
-#plane{position:absolute;left:8%;bottom:18%;font-size:55px;z-index:3;filter:drop-shadow(0 0 12px red);transition:left .1s,bottom .1s}
-#trail{position:absolute;left:8%;bottom:22%;width:0;height:4px;background:#ff254b;box-shadow:0 0 14px red;transform:rotate(-16deg);transform-origin:left}
-.pill{position:absolute;top:12px;padding:10px;background:#020817dd;border:1px solid #294361;border-radius:9px;font-size:12px}
-#countbox{left:10px}#crashbox{right:10px;color:#ff3158}
-.axis{position:absolute;bottom:14px;left:8%;right:8%;display:flex;justify-content:space-between;color:#b9cbe4;font-size:11px}
-.status{text-align:center;color:#a8bdd9;font-size:13px;padding:10px 0 2px}
-.history{display:flex;gap:7px;overflow:auto}
-.chip{padding:8px 11px;border:1px solid #00db8b;border-radius:18px;color:#00ed91;white-space:nowrap;font-weight:bold;font-size:12px}
-.chip:nth-child(3n){color:#df59ff;border-color:#df59ff}
-.chip:nth-child(3n+2){color:#30caff;border-color:#30caff}
-.tabs{display:grid;grid-template-columns:1fr 1fr;background:#030a17;border:1px solid #263d59;border-radius:10px;overflow:hidden}
-.tabs button{padding:12px 5px;border:0;background:transparent;font-weight:bold}
-.tabs button.active{background:linear-gradient(90deg,#ff1744,#a50035)}
-label{display:block;margin:13px 0 7px;color:#c3d4ec;font-size:13px}
-.amount{display:flex;gap:6px}
-.amount button,.auto-row button{min-width:38px;background:#14263f;border:1px solid #3b4f6a;border-radius:8px;font-size:20px}
-input{width:100%;min-width:0;padding:12px 4px;border-radius:8px;border:1px solid #354c68;background:#030a16;color:white;text-align:center;font-size:19px}
-.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:9px}
-.presets button,.auto-presets button{padding:10px 3px;background:#09172d;border:1px solid #294464;border-radius:8px}
-.presets button.selected{background:#a90035;border-color:#ff3159}
-.presets .max{grid-column:1/-1;background:linear-gradient(#ffc83d,#ae7400);color:#171000;font-weight:bold}
-.primary{width:100%;padding:15px 4px;border:0;border-radius:11px;font-size:19px;font-weight:900;margin-top:12px}
-.primary small{display:block;font-size:12px;margin-top:4px}
-.bet{background:linear-gradient(#18f348,#00a52d);color:#00270d}
-.cash{background:linear-gradient(#ff3155,#d90030)}
-.auto{border:1px solid #263e59;background:#040c1a;border-radius:10px;padding:10px;margin-top:12px}
-.auto-row{display:flex;gap:6px}
-.auto-row input{font-size:16px}
-.auto-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px}
-.auto-presets button{font-size:11px}
-#message{min-height:40px;padding-top:12px;text-align:center;color:#ffd45c;font-size:13px;line-height:1.4}
-.features{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:18px 10px;border-top:1px solid #29405b;text-align:center}
-.features b{display:block;font-size:12px;margin-bottom:5px}
-.features small,footer{color:#8ea5c2;font-size:10px}
-footer{text-align:center;padding:12px}
-@media(max-width:850px){.layout{grid-template-columns:1fr 260px}.sidebar{display:none}.graph{height:320px}}
-@media(max-width:570px){header{padding:10px}.layout{display:flex;flex-direction:column;padding:7px;gap:0}.sidebar{display:flex;overflow-x:auto;padding:4px;gap:4px;order:0}.sidebar button{width:auto;white-space:nowrap;padding:10px}.graph{height:300px}.features{grid-template-columns:repeat(2,1fr)}.logo{font-size:27px}.balance{font-size:17px;padding:9px}#mult{font-size:50px}}
-</style>
-</head>
-<body>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>King To Win</title><style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-<header>
- <div><div class="logo">✈ AVIATOR</div><div class="tag">FLY HIGH • CASH OUT • PLAY SMART</div></div>
- <div class="balance">🪙 <span id="balance">10,000</span></div>
- <div><button onclick="showHistory()" style="background:none;border:0">◷ History</button> <button onclick="rules()" style="background:none;border:0">🏆 Rules</button></div>
-</header>
+body{
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  color:#fff;
+  background:
+    radial-gradient(circle at 50% 0%,#3b2a00 0%,#151006 28%,#050505 65%);
+  overflow-x:hidden;
+}
 
-<div class="layout">
-<nav class="sidebar">
- <button class="active" onclick="menu(this,'Aviator')">✈️ Aviator</button>
- <button onclick="menu(this,'Live Games')">🎮 Live Games</button>
- <button onclick="menu(this,'Slots')">🎰 Slots</button>
- <button onclick="menu(this,'Casino')">🃏 Casino</button>
- <button onclick="menu(this,'Sports')">⚽ Sports</button>
- <button onclick="menu(this,'Profile')">👤 Profile</button>
- <button onclick="menu(this,'Settings')">⚙️ Settings</button>
-</nav>
+/* TOP */
+.top{
+  padding:24px 18px 12px;
+  text-align:center;
+}
 
-<main>
- <section class="panel">
-  <div class="graph">
-   <div class="pill" id="countbox">NEXT ROUND<b id="countdown" style="display:block;color:#ffd34e;font-size:22px">05</b></div>
-   <div class="pill" id="crashbox">✈ AVIATOR</div>
-   <div id="mult">1.00x</div>
-   <div id="trail"></div><div id="plane">✈️</div>
-   <div class="axis"><span>0s</span><span>3s</span><span>6s</span><span>9s</span><span>12s</span><span>15s</span></div>
+.crown{
+  font-size:52px;
+  filter:drop-shadow(0 0 15px #ffd84d);
+  animation:float 2.5s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+
+.title{
+  margin-top:8px;
+  font-size:31px;
+  font-weight:900;
+  letter-spacing:3px;
+  color:#ffd84d;
+  text-shadow:0 0 15px rgba(255,216,77,.45);
+}
+
+.subtitle{
+  margin-top:7px;
+  color:#aaa;
+  font-size:13px;
+  letter-spacing:2px;
+}
+
+/* MAIN CARD */
+.panel{
+  width:92%;
+  max-width:480px;
+  margin:28px auto;
+  padding:24px;
+  border:1px solid rgba(255,216,77,.28);
+  border-radius:25px;
+  background:rgba(255,255,255,.055);
+  backdrop-filter:blur(12px);
+  box-shadow:
+    0 15px 50px rgba(0,0,0,.65),
+    inset 0 0 25px rgba(255,216,77,.035);
+}
+
+/* SITE CARD */
+.site{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:18px;
+  border-radius:19px;
+  text-decoration:none;
+  color:white;
+  background:linear-gradient(135deg,#211b0b,#0d0d0d);
+  border:1px solid rgba(255,216,77,.35);
+  overflow:hidden;
+  transition:.25s;
+}
+
+.site:before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:70%;
+  height:100%;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.12),
+    transparent
+  );
+  transform:skewX(-20deg);
+  transition:.6s;
+}
+
+.site:hover:before{
+  left:130%;
+}
+
+.site:active{
+  transform:scale(.97);
+}
+
+/* ICON */
+.icon{
+  width:62px;
+  height:62px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:18px;
+  font-size:32px;
+  background:linear-gradient(145deg,#ffd84d,#a87800);
+  box-shadow:
+    0 0 20px rgba(255,216,77,.3),
+    inset 0 1px 2px #fff6;
+}
+
+/* TEXT */
+.info{
+  flex:1;
+}
+
+.name{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+.status{
+  margin-top:6px;
+  font-size:12px;
+  color:#9d9d9d;
+}
+
+.dot{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  margin-right:5px;
+  border-radius:50%;
+  background:#37e879;
+  box-shadow:0 0 8px #37e879;
+}
+
+/* ARROW */
+.arrow{
+  font-size:27px;
+  color:#ffd84d;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  color:#666;
+  font-size:11px;
+  letter-spacing:1px;
+  margin-top:30px;
+}
+
+/* DECORATION */
+.line{
+  width:75px;
+  height:2px;
+  margin:14px auto 0;
+  background:linear-gradient(90deg,transparent,#ffd84d,transparent);
+}
+</style></head><body><div class="top">  <div class="crown">👑</div>  <div class="title">
+    KING TO WIN
+  </div>  <div class="line"></div>  <div class="subtitle">
+    WELCOME TO THE KINGDOM
+  </div></div><div class="panel"><a class="site"
+href="https://kingtowin.example"
+target="_blank">
+
+<div class="icon">♛</div>
+
+<div class="info">
+  <div class="name">KING TO WIN</div>
+
+  <div class="status">
+    <span class="dot"></span>
+    ONLINE
   </div>
-  <div class="status" id="status">Preparing next flight...</div>
- </section>
-
- <section class="panel">
-  <b style="display:block;margin-bottom:12px">◷ RECENT ROUNDS</b>
-  <div class="history" id="history"><span class="chip">3.21x</span><span class="chip">1.45x</span><span class="chip">2.76x</span><span class="chip">1.12x</span></div>
- </section>
-</main>
-
-<aside class="panel">
- <div class="tabs">
-  <button id="manual" class="active" onclick="setMode('manual')">BET</button>
-  <button id="autoTab" onclick="setMode('auto')">AUTO</button>
- </div>
-
- <label for="amount">🪙 BET AMOUNT (COINS)</label>
- <div class="amount">
-  <button onclick="change(-50)">−</button>
-  <input id="amount" type="number" min="50" step="1" value="50">
-  <button onclick="change(50)">+</button>
- </div>
-
- <div class="presets">
-  <button class="selected" onclick="preset(50,this)">50</button>
-  <button onclick="preset(100,this)">100</button>
-  <button onclick="preset(200,this)">200</button>
-  <button onclick="preset(500,this)">500</button>
-  <button onclick="preset(1000,this)">1K</button>
-  <button onclick="preset(2000,this)">2K</button>
-  <button onclick="preset(5000,this)">5K</button>
-  <button onclick="preset(10000,this)">10K</button>
-  <button onclick="preset(50000,this)">50K</button>
-  <button class="max" onclick="preset('max',this)">🪙 MAX</button>
- </div>
-
- <button id="betBtn" class="primary bet" onclick="placeBet()">✈ BET<small id="betCaption">50 Coins</small></button>
- <button id="cashBtn" class="primary cash" onclick="cashOut()" hidden>✈ CASH OUT<small id="cashCaption">Virtual coins</small></button>
-
- <div class="auto">
-  <label style="margin-top:0" for="autoAt">⚡ AUTO CASHOUT MULTIPLIER</label>
-  <div class="auto-row">
-   <button onclick="adjustAuto(-0.5)">−</button>
-   <input id="autoAt" type="number" min="1.1" max="1000" step="0.1" value="2">
-   <button onclick="adjustAuto(0.5)">+</button>
-  </div>
-  <div class="auto-presets">
-   <button onclick="setAuto(1.5)">1.50x</button>
-   <button onclick="setAuto(2)">2.00x</button>
-   <button onclick="setAuto(3)">3.00x</button>
-   <button onclick="setAuto(5)">5.00x</button>
-  </div>
- </div>
- <button onclick="addCoins()" style="width:100%;padding:9px;margin-top:9px;background:#14263f;border:1px solid #294464;border-radius:8px">＋ ADD 10,000 DEMO COINS</button>
- <div id="message">Choose your virtual coin bet.</div>
-</aside>
 </div>
 
-<div class="features">
- <div><b>🪙 VIRTUAL COINS</b><small>Demo entertainment</small></div>
- <div><b>⚡ FAST ROUNDS</b><small>Animated flight</small></div>
- <div><b>✈ AUTO CASHOUT</b><small>Set multiplier</small></div>
- <div><b>🛡 PLAY SMART</b><small>Virtual coins only</small></div>
-</div>
-<footer>AVIATOR DEMO • No real-money deposits or withdrawals • Simulated rounds</footer>
+<div class="arrow">›</div>
 
-<script>
-let balance=10000,phase='waiting',mode='manual',flyingBet=0;
-let multiplier=1,crashAt=2,cashed=false;
-let rounds=[],timer=null,countdownTimer=null,count=5,startTime=0;
-const E=id=>document.getElementById(id);
-
-function money(n){return n.toLocaleString('en-US',{maximumFractionDigits:2})}
-function updateBalance(){E('balance').textContent=money(balance)}
-function message(t){E('message').textContent=t}
-function readAmount(){
- let n=Number(E('amount').value);
- return Number.isSafeInteger(n)&&n>=50?n:null
-}
-function updateCaption(){
- let n=readAmount();
- E('betCaption').textContent=n===null?'Enter 50 or more':money(n)+' Coins'
-}
-E('amount').addEventListener('input',updateCaption);
-
-function preset(n,b){
- if(n==='max')n=Math.floor(balance);
- E('amount').value=n;
- document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('selected'));
- if(b)b.classList.add('selected');
- updateCaption()
-}
-function change(d){
- let n=readAmount()||50;
- E('amount').value=Math.max(50,Math.min(balance,n+d));
- updateCaption()
-}
-function adjustAuto(d){
- let n=Number(E('autoAt').value)||2;
- E('autoAt').value=Math.max(1.1,Math.min(1000,Math.round((n+d)*10)/10))
-}
-function setAuto(n){E('autoAt').value=n}
-function setMode(m){
- mode=m;
- E('manual').classList.toggle('active',m==='manual');
- E('autoTab').classList.toggle('active',m==='auto');
- message(m==='auto'?'Auto mode selected. Place your bet before takeoff.':'Manual mode selected.')
-}
-function placeBet(){
- if(phase!=='waiting'){message('Wait for the next round.');return}
- if(flyingBet>0){message('A bet is already placed.');return}
- let n=readAmount();
- if(n===null){message('Enter a whole number of at least 50 coins.');return}
- if(n>balance){message('Not enough coins. Reduce your bet.');return}
- flyingBet=n;balance-=n;cashed=false;updateBalance();
- message('Bet placed: '+money(n)+' virtual coins.');
- E('betBtn').textContent='✓ BET PLACED';
- E('betBtn').disabled=true
-}
-function cashOut(){
- if(phase!=='flying'||flyingBet<=0||cashed){
-  message('No active bet to cash out.');return
- }
- cashed=true;
- let payout=Math.floor(flyingBet*multiplier*100)/100;
- balance+=payout;updateBalance();
- message('Cashed out at '+multiplier.toFixed(2)+'x • Returned '+money(payout)+' coins.');
- flyingBet=0;E('cashBtn').hidden=true
-}
-function addCoins(){balance+=10000;updateBalance();message('10,000 demo coins added.')}
-function showHistory(){
- message('Recent rounds are displayed above.');
- E('history').scrollIntoView({behavior:'smooth',block:'center'})
-}
-function rules(){
- message('Demo rules: minimum 50 virtual coins. Cash out before the simulated crash. No real money.')
-}
-function menu(btn,name){
- document.querySelectorAll('.sidebar button').forEach(x=>x.classList.remove('active'));
- btn.classList.add('active');
- if(name!=='Aviator')message(name+' is a demo menu. Aviator is the playable demo.')
-}
-function resetPlane(){
- E('plane').style.left='8%';E('plane').style.bottom='18%';
- E('trail').style.width='0'
-}
-function finishRound(){
- clearInterval(timer);phase='waiting';
- let final=multiplier;
- rounds.unshift(final);rounds=rounds.slice(0,12);
- E('history').innerHTML=rounds.map(x=>'<span class="chip">'+x.toFixed(2)+'x</span>').join('');
- E('mult').textContent='CRASHED';
- E('status').textContent='Round ended • Preparing next flight';
- E('cashBtn').hidden=true;
- if(flyingBet>0){
-  message('Plane crashed at '+final.toFixed(2)+'x. This bet lost '+money(flyingBet)+' coins.');
-  flyingBet=0
- }else if(cashed){
-  message('Crash at '+final.toFixed(2)+'x. Your earlier cash out is safe.')
- }
- E('betBtn').hidden=false;E('betBtn').disabled=false;
- E('betBtn').innerHTML='✈ BET<small id="betCaption">Next round</small>';
- resetPlane();count=5;E('countdown').textContent='05';
- countdownTimer=setInterval(()=>{
-  if(phase!=='waiting'){clearInterval(countdownTimer);return}
-  count--;E('countdown').textContent='0'+Math.max(0,count);
-  if(count<=0){clearInterval(countdownTimer);startRound()}
- },1000)
-}
-function startRound(){
- if(phase!=='waiting')return;
- phase='flying';multiplier=1;cashed=false;
- crashAt=1.1+Math.random()*4.5;
- startTime=Date.now();
- E('countdown').textContent='FLY';
- E('status').textContent='✈ Plane is flying...';
- E('betBtn').hidden=true;E('cashBtn').hidden=!(flyingBet>0);
- E('mult').textContent='1.00x';
- timer=setInterval(()=>{
-  if(phase!=='flying')return;
-  let elapsed=(Date.now()-startTime)/1000;
-  multiplier=Math.exp(elapsed*.22);
-  let p=Math.min(82,elapsed*5.5);
-  E('plane').style.left=(8+p)+'%';
-  E('plane').style.bottom=(18+Math.min(50,elapsed*3.5))+'%';
-  E('trail').style.width=p+'%';
-  if(multiplier>=crashAt){
-   multiplier=crashAt;E('mult').textContent=crashAt.toFixed(2)+'x';
-   finishRound();return
-  }
-  E('mult').textContent=multiplier.toFixed(2)+'x';
-  if(mode==='auto'&&flyingBet>0&&!cashed){
-   let target=Number(E('autoAt').value);
-   if(Number.isFinite(target)&&target>=1.1&&multiplier>=target)cashOut()
-  }
-  if(flyingBet>0&&!cashed){
-   E('cashBtn').hidden=false;
-   E('cashCaption').textContent='Return '+money(Math.floor(flyingBet*multiplier))+' coins'
-  }
- },80)
-}
-updateBalance();updateCaption();
-countdownTimer=setInterval(()=>{
- if(phase!=='waiting')return;
- count--;E('countdown').textContent='0'+Math.max(0,count);
- if(count<=0){clearInterval(countdownTimer);startRound()}
-},1000);
-</script>
-</body>
+  </a></div><div class="footer">
+  KING TO WIN • PREMIUM PANEL
+</div></body>
 </html>
