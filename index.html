@@ -1,199 +1,282 @@
-DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>King To Win</title><style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+<title>King To Win</title>
+<style>
+:root{--gold:#ffd84d;--gold2:#a87800;--bg:#050505;--panel:#15130e;--green:#19c37d;--red:#ff4d5b;--muted:#aaa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(circle at 50% 0%,#3b2a00 0%,#151006 28%,#050505 65%);overflow-x:hidden}
+button,input,select{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}
+.top{padding:24px 18px 12px;text-align:center}
+.crown{font-size:52px;filter:drop-shadow(0 0 15px var(--gold));animation:float 2.5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.title{margin-top:8px;font-size:31px;font-weight:900;letter-spacing:3px;color:var(--gold);text-shadow:0 0 15px #ffd84d73}
+.subtitle{margin-top:7px;color:#aaa;font-size:13px;letter-spacing:2px}
+.line{width:75px;height:2px;margin:14px auto 0;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.panel{width:92%;max-width:760px;margin:22px auto;padding:22px;border:1px solid #ffd84d47;border-radius:25px;background:#ffffff0e;backdrop-filter:blur(12px);box-shadow:0 15px 50px #000a,inset 0 0 25px #ffd84d09}
+.site{position:relative;display:flex;align-items:center;gap:16px;padding:18px;border-radius:19px;text-decoration:none;color:white;background:linear-gradient(135deg,#211b0b,#0d0d0d);border:1px solid #ffd84d59;overflow:hidden}
+.icon{width:62px;height:62px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:18px;font-size:32px;background:linear-gradient(145deg,var(--gold),var(--gold2));box-shadow:0 0 20px #ffd84d4d,inset 0 1px 2px #fff6;color:#211900}
+.info{flex:1}.name{font-size:20px;font-weight:800;letter-spacing:1px}.status{margin-top:6px;font-size:12px;color:#9d9d9d}.dot{display:inline-block;width:7px;height:7px;margin-right:5px;border-radius:50%;background:#37e879;box-shadow:0 0 8px #37e879}.arrow{font-size:27px;color:var(--gold)}
+.footer{text-align:center;color:#666;font-size:11px;letter-spacing:1px;margin:30px 0 18px}
+.btn{border:1px solid #e3bb36;border-radius:12px;padding:11px 15px;color:#1a1400;background:linear-gradient(135deg,#ffe77b,#c18c0b);font-weight:800}
+.btn.secondary{background:#171717;color:#f6d85d;border-color:#8e7224}.btn.danger{background:#351014;color:#ffb6bc;border-color:#9b2934}.btn.good{background:#0d3025;color:#a6ffcf;border-color:#247c59}
+input,select{width:100%;padding:12px;border:1px solid #55451b;border-radius:10px;background:#0b0b0b;color:#fff;outline:none}
+label{display:block;color:#d7cda9;font-size:13px;margin:10px 0 6px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.row>*{flex:1;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px}
+.tile{padding:18px;border:1px solid #6e571d;border-radius:17px;background:linear-gradient(145deg,#211b0b,#090909);text-align:left;color:white}
+.tile .emoji{font-size:28px;margin-bottom:9px}.tile strong{display:block;color:var(--gold);font-size:17px}.tile small{display:block;color:#aaa;margin-top:7px}
+.notice{padding:11px 13px;border-radius:10px;background:#241c08;border:1px solid #80661f;color:#f6df87;margin:12px 0;font-size:13px}
+.muted{color:#aaa;font-size:13px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+h2{color:var(--gold);font-size:21px}h3{font-size:16px;color:#ffe58a;margin-bottom:8px}
+.balance{font-weight:900;color:#ffe36a;font-size:24px}
+.table-wrap{overflow:auto;margin-top:12px}table{width:100%;border-collapse:collapse;font-size:13px;min-width:480px}th,td{padding:10px;border-bottom:1px solid #3b3219;text-align:left}th{color:#f8d95b}td{color:#eee}
+.card{background:#101010;border:1px solid #4b3c19;border-radius:15px;padding:15px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px}.nav button{flex:1;min-width:110px}
+.game-shell{width:96%;max-width:1100px;margin:15px auto;padding:16px;border-radius:18px;background:#080b12;border:1px solid #4b3c19}
+.game-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.game-balance{background:#101725;border:1px solid #28354d;padding:10px 14px;border-radius:12px}
+.ab-layout{display:grid;grid-template-columns:1.3fr 1fr;gap:14px}.felt{background:radial-gradient(ellipse,#176344,#063b2b 65%,#05261d);border:4px solid #8a6720;border-radius:22px;padding:18px;min-height:260px}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:12px}.side{padding:12px;border:1px solid #bca04e;border-radius:14px;background:#071d18;text-align:center}.side h3{color:#fff;margin-bottom:12px}
+.cards{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-height:62px}.playing-card{width:39px;height:55px;border-radius:6px;background:#fff;color:#111;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;box-shadow:0 2px 5px #0009}.playing-card.red{color:#d82235}
+.joker{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px;background:#0a111a;border:1px solid #344155;border-radius:12px}.joker .playing-card{width:48px;height:67px}
+.history-list{display:flex;flex-wrap:wrap;gap:6px}.history-chip{padding:6px 9px;border-radius:8px;background:#202838;font-size:12px}
+.aviator-layout{display:grid;grid-template-columns:290px 1fr;gap:14px}.aviator-side{padding:15px;border-radius:14px;background:#101827;border:1px solid #29374d}.aviator-stage{min-height:310px;position:relative;overflow:hidden;border-radius:15px;border:1px solid #29374d;background:radial-gradient(ellipse at 50% 100%,#202e45,#090d15 68%);display:flex;align-items:center;justify-content:center}
+.multiplier{font-size:clamp(34px,7vw,68px);font-weight:900;color:#fff;text-shadow:0 0 18px #ff334a}.plane{position:absolute;font-size:42px;left:15%;bottom:18%;transition:left .25s,bottom .25s;filter:drop-shadow(0 0 10px #ff344b)}
+.preset{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.preset button{flex:1;min-width:45px;padding:8px 4px;border-radius:8px;border:1px solid #34445c;background:#1a2638;color:#fff}
+.small-btn{padding:8px 10px;font-size:12px}.auth-wrap{max-width:460px;margin:18px auto}
+@media(max-width:720px){.ab-layout,.aviator-layout{grid-template-columns:1fr}.panel{padding:16px}.title{font-size:27px}.felt{padding:10px}.aviator-stage{min-height:240px}}
+</style>
+</head>
+<body>
+<header class="top" id="siteHeader">
+  <div class="crown">👑</div><div class="title">KING TO WIN</div><div class="line"></div>
+  <div class="subtitle">WELCOME TO THE KINGDOM</div>
+</header>
 
-body{
-  min-height:100vh;
-  font-family:Arial,sans-serif;
-  color:#fff;
-  background:
-    radial-gradient(circle at 50% 0%,#3b2a00 0%,#151006 28%,#050505 65%);
-  overflow-x:hidden;
-}
-
-/* TOP */
-.top{
-  padding:24px 18px 12px;
-  text-align:center;
-}
-
-.crown{
-  font-size:52px;
-  filter:drop-shadow(0 0 15px #ffd84d);
-  animation:float 2.5s ease-in-out infinite;
-}
-
-@keyframes float{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-6px)}
-}
-
-.title{
-  margin-top:8px;
-  font-size:31px;
-  font-weight:900;
-  letter-spacing:3px;
-  color:#ffd84d;
-  text-shadow:0 0 15px rgba(255,216,77,.45);
-}
-
-.subtitle{
-  margin-top:7px;
-  color:#aaa;
-  font-size:13px;
-  letter-spacing:2px;
-}
-
-/* MAIN CARD */
-.panel{
-  width:92%;
-  max-width:480px;
-  margin:28px auto;
-  padding:24px;
-  border:1px solid rgba(255,216,77,.28);
-  border-radius:25px;
-  background:rgba(255,255,255,.055);
-  backdrop-filter:blur(12px);
-  box-shadow:
-    0 15px 50px rgba(0,0,0,.65),
-    inset 0 0 25px rgba(255,216,77,.035);
-}
-
-/* SITE CARD */
-.site{
-  position:relative;
-  display:flex;
-  align-items:center;
-  gap:16px;
-  padding:18px;
-  border-radius:19px;
-  text-decoration:none;
-  color:white;
-  background:linear-gradient(135deg,#211b0b,#0d0d0d);
-  border:1px solid rgba(255,216,77,.35);
-  overflow:hidden;
-  transition:.25s;
-}
-
-.site:before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:-100%;
-  width:70%;
-  height:100%;
-  background:linear-gradient(
-    90deg,
-    transparent,
-    rgba(255,255,255,.12),
-    transparent
-  );
-  transform:skewX(-20deg);
-  transition:.6s;
-}
-
-.site:hover:before{
-  left:130%;
-}
-
-.site:active{
-  transform:scale(.97);
-}
-
-/* ICON */
-.icon{
-  width:62px;
-  height:62px;
-  flex-shrink:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:18px;
-  font-size:32px;
-  background:linear-gradient(145deg,#ffd84d,#a87800);
-  box-shadow:
-    0 0 20px rgba(255,216,77,.3),
-    inset 0 1px 2px #fff6;
-}
-
-/* TEXT */
-.info{
-  flex:1;
-}
-
-.name{
-  font-size:20px;
-  font-weight:800;
-  letter-spacing:1px;
-}
-
-.status{
-  margin-top:6px;
-  font-size:12px;
-  color:#9d9d9d;
-}
-
-.dot{
-  display:inline-block;
-  width:7px;
-  height:7px;
-  margin-right:5px;
-  border-radius:50%;
-  background:#37e879;
-  box-shadow:0 0 8px #37e879;
-}
-
-/* ARROW */
-.arrow{
-  font-size:27px;
-  color:#ffd84d;
-}
-
-/* FOOTER */
-.footer{
-  text-align:center;
-  color:#666;
-  font-size:11px;
-  letter-spacing:1px;
-  margin-top:30px;
-}
-
-/* DECORATION */
-.line{
-  width:75px;
-  height:2px;
-  margin:14px auto 0;
-  background:linear-gradient(90deg,transparent,#ffd84d,transparent);
-}
-</style></head><body><div class="top">  <div class="crown">👑</div>  <div class="title">
-    KING TO WIN
-  </div>  <div class="line"></div>  <div class="subtitle">
-    WELCOME TO THE KINGDOM
-  </div></div><div class="panel"><a class="site"
-href="https://kingtowin.example"
-target="_blank">
-
-<div class="icon">♛</div>
-
-<div class="info">
-  <div class="name">KING TO WIN</div>
-
-  <div class="status">
-    <span class="dot"></span>
-    ONLINE
+<main>
+<section id="landing" class="panel">
+  <div class="site" aria-label="King To Win">
+    <div class="icon">♛</div><div class="info"><div class="name">KING TO WIN</div><div class="status"><span class="dot"></span>ONLINE</div></div><div class="arrow">›</div>
   </div>
-</div>
+  <div class="auth-wrap">
+    <h2 style="text-align:center;margin:22px 0 8px">Player Login</h2>
+    <p class="muted" style="text-align:center">Login with your User ID and password to continue.</p>
+    <form id="loginForm">
+      <label for="loginId">User ID</label><input id="loginId" autocomplete="username" required>
+      <label for="loginPass">Password</label><input id="loginPass" type="password" autocomplete="current-password" required>
+      <button class="btn" style="width:100%;margin-top:15px" type="submit">LOGIN / CREATE ACCOUNT</button>
+    </form>
+    <div id="loginMsg" class="notice hidden" role="status"></div>
+    <p class="muted" style="text-align:center;margin-top:12px">New players can create an account here. New account balance: <b>0 coins</b>.</p>
+  </div>
+</section>
 
-<div class="arrow">›</div>
+<section id="userPanel" class="panel hidden">
+  <div class="section-head"><div><h2>Welcome, <span id="userName"></span></h2><p class="muted">Your player panel</p></div><div><div class="muted">Available balance</div><div class="balance"><span id="userBalance">0</span> coins</div></div></div>
+  <div class="notice">Your balance is controlled by the Admin. New accounts start with 0 coins.</div>
+  <div class="grid">
+    <button class="tile" id="openAndar"><div class="emoji">🎴</div><strong>Andar Bahar</strong><small>Open game</small></button>
+    <button class="tile" id="openAviator"><div class="emoji">✈️</div><strong>Aviator</strong><small>Open game</small></button>
+  </div>
+  <div class="section-head" style="margin-top:22px"><h3>My Statement / Game History</h3><button class="btn secondary small-btn" id="logoutBtn">LOG OUT</button></div>
+  <div id="userHistory" class="table-wrap"></div>
+</section>
 
-  </a></div><div class="footer">
-  KING TO WIN • PREMIUM PANEL
-</div></body>
+<section id="adminPanel" class="panel hidden">
+  <div class="section-head"><div><h2>Admin Control Panel</h2><p class="muted">Manage users, balances and account access.</p></div><button class="btn secondary small-btn" id="adminLogout">LOG OUT</button></div>
+  <div class="notice">Important: this single-file version stores data in this browser only. It is a working prototype, not secure multi-user hosting. See note at the bottom.</div>
+  <div class="card">
+    <h3>Create Player</h3>
+    <form id="createUserForm" class="row">
+      <div><label for="newUserId">New User ID</label><input id="newUserId" required></div>
+      <div><label for="newUserPass">Initial Password</label><input id="newUserPass" type="password" required></div>
+      <div style="flex:0 0 140px;align-self:end"><button class="btn" style="width:100%">CREATE USER</button></div>
+    </form>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>Manage Player Balance / Status</h3>
+    <div class="row"><div><label for="manageUser">Select user</label><select id="manageUser"></select></div><div><label for="coinAmount">Coins to add/remove</label><input id="coinAmount" type="number" min="1" step="1" placeholder="e.g. 100"></div></div>
+    <div class="row" style="margin-top:10px"><button class="btn good" id="addCoins">ADD COINS</button><button class="btn danger" id="removeCoins">REMOVE COINS</button><button class="btn secondary" id="toggleBlock">BLOCK / UNBLOCK</button></div>
+    <div id="adminMsg" class="notice hidden" role="status"></div>
+  </div>
+  <div class="table-wrap" id="adminUsers"></div>
+</section>
+
+<section id="andarGame" class="game-shell hidden">
+  <div class="game-top"><div><h2 style="color:#ffe16b">🎴 Andar Bahar</h2><p class="muted">Both sides display their cards each round.</p></div><div class="game-balance">Balance: <b id="abBalance">0</b> coins</div><button class="btn secondary small-btn" data-back>BACK TO PANEL</button></div>
+  <div class="ab-layout">
+    <div class="felt">
+      <div class="sides">
+        <div class="side"><h3>ANDAR</h3><div id="andarCards" class="cards"></div><p class="muted" id="andarResult" style="margin-top:8px">Waiting for round</p></div>
+        <div class="side"><h3>BAHAR</h3><div id="baharCards" class="cards"></div><p class="muted" id="baharResult" style="margin-top:8px">Waiting for round</p></div>
+      </div>
+      <div class="joker"><div class="playing-card red" id="jokerCard">A♥</div><div><b>Joker Card</b><p class="muted">Match the rank to determine the winning side.</p></div></div>
+    </div>
+    <div class="card">
+      <h3>Place a virtual coin bet</h3><label for="abBet">Bet amount</label><input id="abBet" type="number" min="1" step="1" value="10">
+      <div class="preset"><button type="button" data-abbet="10">10</button><button type="button" data-abbet="25">25</button><button type="button" data-abbet="50">50</button><button type="button" data-abbet="100">100</button></div>
+      <label for="abChoice">Choose side</label><select id="abChoice"><option value="ANDAR">ANDAR</option><option value="BAHAR">BAHAR</option></select>
+      <button class="btn" id="playAndar" style="width:100%;margin-top:14px">PLAY ROUND</button>
+      <div id="abMessage" class="notice" role="status">A round costs the bet amount. Matching side wins 1:1 profit.</div>
+      <h3 style="margin-top:15px">Recent Results</h3><div id="abHistory" class="history-list"></div>
+    </div>
+  </div>
+</section>
+
+<section id="aviatorGame" class="game-shell hidden">
+  <div class="game-top"><div><h2 style="color:#ff5a69">✈️ Aviator Premium</h2><p class="muted">Place a bet, then cash out before the flight ends.</p></div><div class="game-balance">Balance: <b id="avBalance">0</b> coins</div><button class="btn secondary small-btn" data-back>BACK TO PANEL</button></div>
+  <div class="aviator-layout">
+    <div class="aviator-side">
+      <h3>Place your bet</h3><label for="avBet">Bet amount</label><input id="avBet" type="number" min="1" step="1" value="10">
+      <div class="preset"><button type="button" data-avbet="10">10</button><button type="button" data-avbet="25">25</button><button type="button" data-avbet="50">50</button><button type="button" data-avbet="100">100</button></div>
+      <label for="autoCash">Auto cashout multiplier (optional)</label><input id="autoCash" type="number" min="1.1" step="0.1" placeholder="e.g. 2.0">
+      <button class="btn" id="avBetBtn" style="width:100%;margin-top:14px">PLACE BET</button>
+      <button class="btn good hidden" id="cashOutBtn" style="width:100%;margin-top:9px">CASH OUT</button>
+      <div id="avMessage" class="notice" role="status">Your bet is deducted once when placed. Cash out returns your stake multiplied by the displayed value.</div>
+      <h3 style="margin-top:12px">Round History</h3><div id="avHistory" class="history-list"></div>
+    </div>
+    <div class="aviator-stage"><div class="multiplier" id="multiplier">Ready</div><div class="plane" id="plane">✈</div></div>
+  </div>
+</section>
+</main>
+<div class="footer">KING TO WIN • PREMIUM PANEL<br><span style="letter-spacing:0">Virtual coins only • No real-money payouts</span></div>
+
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const STORE='kingToWinPrototype_v1';
+let data;
+try{data=JSON.parse(localStorage.getItem(STORE)||'null')}catch(e){data=null}
+if(!data||!data.users||!data.users.admin){
+ data={users:{admin:{id:'admin',password:'King@12345',balance:0,blocked:false,isAdmin:true,history:[]}},activeUser:null};
+}
+function save(){localStorage.setItem(STORE,JSON.stringify(data))}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function current(){return data.activeUser?data.users[data.activeUser]:null}
+function money(n){return Math.max(0,Math.floor(Number(n)||0))}
+function log(user,game,detail,change){user.history=user.history||[];user.history.unshift({time:new Date().toLocaleString(),game,detail,change:Number(change)||0,balance:user.balance});user.history=user.history.slice(0,100)}
+function showOnly(id){['landing','userPanel','adminPanel','andarGame','aviatorGame'].forEach(x=>$(x).classList.toggle('hidden',x!==id))}
+function updateBalance(){let u=current();if(!u)return;$('userBalance').textContent=u.balance;$('abBalance').textContent=u.balance;$('avBalance').textContent=u.balance}
+function renderHistory(target,history){
+ if(!history||!history.length){$(target).innerHTML='<p class="muted">No activity yet.</p>';return}
+ $(target).innerHTML='<table><thead><tr><th>Time</th><th>Game / Type</th><th>Details</th><th>Change</th><th>Balance</th></tr></thead><tbody>'+history.map(h=>`<tr><td>${esc(h.time)}</td><td>${esc(h.game)}</td><td>${esc(h.detail)}</td><td style="color:${h.change>=0?'#77efae':'#ff8b95'}">${h.change>0?'+':''}${h.change}</td><td>${h.balance}</td></tr>`).join('')+'</tbody></table>'
+}
+function renderUser(){
+ const u=current();if(!u)return;$('userName').textContent=u.id;updateBalance();renderHistory('userHistory',u.history)
+}
+function renderAdmin(){
+ const ids=Object.keys(data.users).filter(id=>!data.users[id].isAdmin);
+ $('manageUser').innerHTML=ids.length?ids.map(id=>`<option value="${esc(id)}">${esc(id)}</option>`).join(''):'<option value="">No players yet</option>';
+ $('adminUsers').innerHTML='<table><thead><tr><th>User ID</th><th>Balance</th><th>Status</th><th>History entries</th></tr></thead><tbody>'+ids.map(id=>{let u=data.users[id];return `<tr><td>${esc(id)}</td><td>${u.balance}</td><td>${u.blocked?'BLOCKED':'ACTIVE'}</td><td>${(u.history||[]).length}</td>`}).join('')+'</tbody></table>'
+}
+function msg(id,text){$(id).textContent=text;$(id).classList.remove('hidden')}
+function hideMsg(id){$(id).classList.add('hidden')}
+function enterUser(id){data.activeUser=id;save();renderUser();showOnly('userPanel')}
+$('loginForm').addEventListener('submit',e=>{
+ e.preventDefault();hideMsg('loginMsg');
+ const id=$('loginId').value.trim(),pass=$('loginPass').value;
+ if(!id||!pass){msg('loginMsg','Enter both User ID and password.');return}
+ if(id.toLowerCase()==='admin'&&id==='admin'&&data.users.admin.password===pass){data.activeUser='admin';save();renderAdmin();showOnly('adminPanel');return}
+ let u=data.users[id];
+ if(!u){
+   data.users[id]={id,password:pass,balance:0,blocked:false,isAdmin:false,history:[]};log(data.users[id],'Account','Account created',0);save();enterUser(id);return
+ }
+ if(u.isAdmin){msg('loginMsg','Admin sign-in failed.');return}
+ if(u.blocked){msg('loginMsg','This account is blocked. Please contact the Admin.');return}
+ if(u.password!==pass){msg('loginMsg','Incorrect User ID or password.');return}
+ enterUser(id)
+});
+$('createUserForm').addEventListener('submit',e=>{
+ e.preventDefault();if(current()?.id!=='admin')return;
+ const id=$('newUserId').value.trim(),pass=$('newUserPass').value;
+ if(!id||!pass){msg('adminMsg','Enter a user ID and password.');return}
+ if(id.toLowerCase()==='admin'||data.users[id]){msg('adminMsg','That User ID already exists or is reserved.');return}
+ data.users[id]={id,password:pass,balance:0,blocked:false,isAdmin:false,history:[]};log(data.users[id],'Account','Created by Admin',0);save();renderAdmin();$('newUserId').value='';$('newUserPass').value='';msg('adminMsg','Player created with 0 coins.')
+});
+function selectedAdminUser(){const id=$('manageUser').value;return id&&data.users[id]&&!data.users[id].isAdmin?data.users[id]:null}
+$('addCoins').addEventListener('click',()=>{let u=selectedAdminUser(),n=money($('coinAmount').value);if(!u||n<1){msg('adminMsg','Select a player and enter a positive coin amount.');return}u.balance+=n;log(u,'Admin balance','Admin added coins',n);save();renderAdmin();if(current()?.id===u.id)renderUser();msg('adminMsg',n+' coins added to '+u.id+'.')});
+$('removeCoins').addEventListener('click',()=>{let u=selectedAdminUser(),n=money($('coinAmount').value);if(!u||n<1){msg('adminMsg','Select a player and enter a positive coin amount.');return}if(n>u.balance){msg('adminMsg','Cannot remove more coins than the player has.');return}u.balance-=n;log(u,'Admin balance','Admin removed coins',-n);save();renderAdmin();if(current()?.id===u.id)renderUser();msg('adminMsg',n+' coins removed from '+u.id+'.')});
+$('toggleBlock').addEventListener('click',()=>{let u=selectedAdminUser();if(!u){msg('adminMsg','Select a player first.');return}u.blocked=!u.blocked;log(u,'Account',u.blocked?'Blocked by Admin':'Unblocked by Admin',0);save();renderAdmin();msg('adminMsg',u.id+(u.blocked?' is now blocked.':' is now unblocked.'))});
+function logout(){data.activeUser=null;save();showOnly('landing');$('loginPass').value=''}
+$('logoutBtn').addEventListener('click',logout);$('adminLogout').addEventListener('click',logout);
+$('openAndar').addEventListener('click',()=>{showOnly('andarGame');updateBalance()});
+$('openAviator').addEventListener('click',()=>{showOnly('aviatorGame');updateBalance()});
+document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',()=>{renderUser();showOnly('userPanel')}));
+document.querySelectorAll('[data-abbet]').forEach(b=>b.addEventListener('click',()=>$('abBet').value=b.dataset.abbet));
+document.querySelectorAll('[data-avbet]').forEach(b=>b.addEventListener('click',()=>$('avBet').value=b.dataset.avbet));
+function playingCard(rank,suit){const red=suit==='♥'||suit==='♦';return `<div class="playing-card ${red?'red':''}">${rank}${suit}</div>`}
+function randomCard(){const ranks=['A','2','3','4','5','6','7','8','9','10','J','Q','K'],suits=['♠','♥','♦','♣'];return {rank:ranks[Math.floor(Math.random()*ranks.length)],suit:suits[Math.floor(Math.random()*4)]}}
+function cardValue(r){return r==='A'?1:r==='J'?11:r==='Q'?12:r==='K'?13:Number(r)}
+let abBusy=false;
+$('playAndar').addEventListener('click',()=>{
+ const u=current();if(!u||abBusy)return;
+ const bet=money($('abBet').value);if(bet<1){msg('abMessage','Enter a valid bet amount.');return}
+ if(u.balance<bet){msg('abMessage','Your balance is too low!');return}
+ const choice=$('abChoice').value;u.balance-=bet;
+ const joker=randomCard(),andar=[],bahar=[];let winner='',steps=0;
+ // Deal both sides; a maximum of 30 cards prevents an endless round.
+ while(steps++<30){
+   const side=steps%2===1?'BAHAR':'ANDAR',c=randomCard();
+   if(side==='BAHAR')bahar.push(c);else andar.push(c);
+   if(c.rank===joker.rank){winner=side;break}
+ }
+ if(!winner)winner= Math.random()<.5?'ANDAR':'BAHAR';
+ $('jokerCard').className='playing-card '+(['♥','♦'].includes(joker.suit)?'red':'');$('jokerCard').textContent=joker.rank+joker.suit;
+ $('andarCards').innerHTML=andar.map(c=>playingCard(c.rank,c.suit)).join('');
+ $('baharCards').innerHTML=bahar.map(c=>playingCard(c.rank,c.suit)).join('');
+ $('andarResult').textContent=winner==='ANDAR'?'WINNER':'LOSING SIDE';
+ $('baharResult').textContent=winner==='BAHAR'?'WINNER':'LOSING SIDE';
+ const won=choice===winner;let change=-bet;
+ if(won){u.balance+=bet*2;change=bet}
+ log(u,'Andar Bahar',`${choice} bet ${bet} — ${winner} won (${won?'WIN':'LOSS'})`,change);
+ save();updateBalance();renderUser();renderAdmin();
+ $('abMessage').textContent=won?`You won! ${bet} coins profit added.`:`${winner} won this round. ${bet} coins lost.`;
+ const chip=document.createElement('span');chip.className='history-chip';chip.textContent=winner+' • '+joker.rank+joker.suit;$('abHistory').prepend(chip);while($('abHistory').children.length>8)$('abHistory').lastChild.remove()
+});
+let avRound=null,avTimer=null,avStart=0,avMultiplier=1,avCrash=2;
+function resetAviator(){avRound=null;clearInterval(avTimer);avTimer=null;$('avBetBtn').classList.remove('hidden');$('cashOutBtn').classList.add('hidden');$('multiplier').textContent='Ready';$('plane').style.left='15%';$('plane').style.bottom='18%'}
+$('avBetBtn').addEventListener('click',()=>{
+ const u=current();if(!u||avRound)return;
+ const bet=money($('avBet').value);if(bet<1){msg('avMessage','Enter a valid bet amount.');return}
+ if(u.balance<bet){msg('avMessage','Your balance is too low!');return}
+ const auto=parseFloat($('autoCash').value);
+ u.balance-=bet;avRound={bet,cashed:false,auto:Number.isFinite(auto)&&auto>=1.1?auto:null};log(u,'Aviator','Bet placed',-bet);save();updateBalance();renderUser();renderAdmin();
+ avMultiplier=1;avCrash=1.25+Math.random()*4.75;avStart=Date.now();$('avBetBtn').classList.add('hidden');$('cashOutBtn').classList.remove('hidden');$('multiplier').textContent='1.00×';
+ msg('avMessage','Bet placed. Cash out before the flight ends!');
+ avTimer=setInterval(()=>{
+   if(!avRound){clearInterval(avTimer);return}
+   const elapsed=(Date.now()-avStart)/1000;avMultiplier=1+elapsed*0.22+elapsed*elapsed*0.012;
+   $('multiplier').textContent=avMultiplier.toFixed(2)+'×';
+   $('plane').style.left=Math.min(78,15+elapsed*5)+'%';$('plane').style.bottom=Math.min(76,18+elapsed*4)+'%';
+   if(avRound.auto&&!avRound.cashed&&avMultiplier>=avRound.auto){cashOut(true);return}
+   if(avMultiplier>=avCrash){crashAviator()}
+ },120)
+});
+function cashOut(auto){
+ if(!avRound||avRound.cashed)return;
+ const u=current();if(!u)return;avRound.cashed=true;clearInterval(avTimer);avTimer=null;
+ const payout=Math.floor(avRound.bet*avMultiplier);u.balance+=payout;log(u,'Aviator',`Cashed out at ${avMultiplier.toFixed(2)}×; payout ${payout}`,payout);
+ const chip=document.createElement('span');chip.className='history-chip';chip.textContent=avMultiplier.toFixed(2)+'×';$('avHistory').prepend(chip);while($('avHistory').children.length>8)$('avHistory').lastChild.remove();
+ save();updateBalance();renderUser();renderAdmin();msg('avMessage',(auto?'Auto cashout':'Cashed out')+' at '+avMultiplier.toFixed(2)+'×. Payout: '+payout+' coins.');resetAviator()
+}
+function crashAviator(){
+ clearInterval(avTimer);avTimer=null;const u=current();if(!u||!avRound)return;
+ const bet=avRound.bet;log(u,'Aviator',`Crashed at ${avCrash.toFixed(2)}×; bet lost`,0);
+ const chip=document.createElement('span');chip.className='history-chip';chip.textContent='💥 '+avCrash.toFixed(2)+'×';$('avHistory').prepend(chip);while($('avHistory').children.length>8)$('avHistory').lastChild.remove();
+ $('multiplier').textContent='CRASHED '+avCrash.toFixed(2)+'×';$('plane').style.left='82%';$('plane').style.bottom='75%';
+ save();updateBalance();renderUser();renderAdmin();msg('avMessage','Flight crashed. Your '+bet+' coin bet was lost.');avRound=null;$('avBetBtn').classList.remove('hidden');$('cashOutBtn').classList.add('hidden')
+}
+$('cashOutBtn').addEventListener('click',()=>cashOut(false));
+// Restore the most appropriate visible screen if a session was left open.
+if(data.activeUser&&data.users[data.activeUser]&&!data.users[data.activeUser].blocked){
+ if(data.users[data.activeUser].isAdmin){renderAdmin();showOnly('adminPanel')}else{renderUser();showOnly('userPanel')}
+}else{data.activeUser=null;save();showOnly('landing')}
+})();
+</script>
+</body>
 </html>
